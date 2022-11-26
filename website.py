@@ -11,7 +11,8 @@ def get_usb():
     for dev in os.listdir('/dev/disk/by-label'):
         if dev != "ESP" and dev != "EFI":
             i += 1
-            dev[i] = '/dev/disk/by-label/'+dev
+            l = os.path.realpath('/dev/disk/by-label/'+dev)
+            devs[i] = l
 
     return devs
 
