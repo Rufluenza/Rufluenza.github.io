@@ -1,35 +1,19 @@
 import streamlit as st
 import os
-import json
 
-# mtp = mountpoint
-debug = True
-devices = {}
-mtp = {}
 
-test = True
+password = 'password'
+
 dev = {}
 devs = {}
 def get_usb():
-    i = 0
-    if test == True:
-        for dev in os.listdir('/Volumes'):
-            if dev != 'Macintosh HD' and dev != 'Time Machine Backups':
-                i += 1
-                devs[i] = '/Volumes/'+dev
-    else:          
-        for dev in os.listdir('/dev/disk/by-label'):
-            if dev != "ESP" and dev != "EFI":
-                i += 1
-                dev[i] = os.path.realpath('/dev/disk/by-label/'+dev)
-            
-            # devs[i] = '/Volumes/'+dev
-            # devs.append((dev, '/Volumes/'+dev))
+    i = 0      
+    for dev in os.listdir('/dev/disk/by-label'):
+        if dev != "ESP" and dev != "EFI":
+            i += 1
+            dev[i] = '/dev/disk/by-label/'+dev
+
     return devs
-
-
-# st.write(get_usb())
-
 
 
 
@@ -43,17 +27,9 @@ def main():
         st.container() # make a container for each device
         if st.button('Eject' + ' ' + get_usb()[i+1].split('/')[-1]):
             st.write('ejecting'+ ' ' + get_usb()[i+1])
-            if os.system('diskutil eject '+get_usb()[i+1]) == 0: # if the command is successful maybe delete the if statement "sudo -S umount" on linux
+            if os.system('echo '+password+' | sudo -S umount '+get_usb()[i+1]) == 0: # if the command is successful maybe delete the if statement "sudo -S umount" on linux
                 st.write('Ejected'+ ' ' + get_usb()[i+1].split('/')[-1])
+                st.write('Reload the page to see the changes')
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-# make a web page with all the devices listed
